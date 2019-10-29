@@ -1,0 +1,26 @@
+#join.jsp	
+message.user.join_title=회원가입
+message.user.rid=아이디
+message.user.passwd=비밀번호
+message.user.uname=이름
+message.user.birth=생년월일
+message.user.phone=휴대폰번호
+message.user.postnum=우편번호
+message.user.address=주소
+message.user.detadd=상세주소
+
+#header.jsp
+message.header.store=스토어
+message.header.store_category=카테고리
+message.header.store_new=신상
+message.header.store_ranking=랭킹
+message.header.store_sale=핫세일
+message.header.qna=질문과답변
+message.header.mypage=마이페이지
+message.header.memberupdate=회원정보 수정
+message.header.myshopping=나의 구매 목록
+message.header.mygood=나의 좋아요
+message.header.myquestion=나의 질문
+
+message.header.register_prod=상품 등록
+message.header.welcome=님 환영합니다

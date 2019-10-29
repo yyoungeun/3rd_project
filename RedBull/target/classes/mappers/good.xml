@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper 
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+   <mapper namespace="kr.co.redbull.mypage">
+	<sql id="goodColumns">
+		gnum as gNum,
+		pnum as pNum,
+		regid     as regId,
+		TO_CHAR(reg_dt, 'yyyy/mm/dd HH24:MI:SS') as regDt
+	</sql>
+	<sql id="baseCondition">
+ 	 		<choose>
+ 	 		 	<when test="'10' == searchDiv">
+ 	 				 and g.regid LIKE '%' || #{searchWord} || '%'
+ 	 			</when>
+ 	 			<otherwise></otherwise>
+ 	 		</choose>
+ 	 </sql>
+	
+	<!--게시판번호 가져오기  -->
+	
+	<!--삭제  --> 
+	<delete id="do_delete" parameterType="MyGood">
+		DELETE FROM GOOD WHERE GNUM = #{gNum, jdbcType=NUMERIC}
+							AND REGID = #{regId, jdbcType=VARCHAR}
+	</delete>
+	
+	<!--등록   -->
+	<insert id="do_save" parameterType="MyGood">
+		INSERT INTO GOOD (
+			PNUM,
+			REGID,
+			REGDT		
+		) VALUES (
+			#{pNum, jdbcType=NUMERIC},
+			#{regId, jdbcType=VARCHAR},
+			SYSDATE
+		)
+	</insert>
+	
+	<!--단건조회  -->
+	<select id="get_selectOne" parameterType="MyGood" resultType="MyGood">
+		SELECT * FROM GOOD
+		WHERE PNUM = #{pNum, jdbcType=NUMERIC}
+		AND REGID = #{regId, jdbcType=VARCHAR}
+	</select>
+	
+	<!--목록조회  --> 
+	<select id="get_retrieve" parameterType="Search" resultType="MyGood">
+		SELECT  g.gnum as gNum,
+				MIN(i.SAVE_FILE_NM) as saveFileNm,
+	        	p.PNAME as pName,
+		      	p.BPRICE as bPrice,
+				p.DISCOUNT as discount,
+				p.DPRICE as dPrice,
+				g.REGID as regId
+		FROM GOOD g JOIN IMAGE i
+     		 ON g.pNum = i.refNum
+			 JOIN PRODUCT p
+			 ON g.pnum = p.pnum
+			 <include refid="baseCondition" />
+		GROUP BY g.gnum, 
+         		 p.PNAME, 
+         		 p.BPRICE, 
+         		 p.DISCOUNT, 
+         		 p.DPRICE,
+         		 g.REGID
+		ORDER BY gNum
+	</select>
+	
+	<!-- 현재 cart 수량확인 -->
+	<select id="countGood" resultType="int">
+			<![CDATA[
+				SELECT COUNT(*)
+				FROM GOOD
+				WHERE pNum = #{pNum, jdbcType=NUMERIC}
+				AND regId = #{regId, jdbcType=VARCHAR}
+			]]>
+	</select>
+
+</mapper>
